@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+/vendor/
+
+# Environment and secrets
+.env
+.env.local
+.env.development
+.env.production
+
+# Hardhat files
+/cache
+/artifacts
+/deployments/localhost.json
+/deployments/hardhat.json
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# Coverage files
+/coverage
+/coverage.json
+
+# Debug logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Hardhat Ignition deployment files
+/ignition/deployments/chain-31337
+
+# Python related
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
