@@ -95,16 +95,16 @@ const Workflow: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href="#demo"
+              href="https://github.com/nmnjain/Auraweave"
               className="inline-block bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-lg hover:shadow-purple-500/50"
             >
               Watch Demo Video
             </a>
             <a
-              href="YOUR_GITHUB_REPO_URL"
+              href="https://github.com/nmnjain/Auraweave"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-slate-700 hover:bg-slate-600 text-white text-lg font-semibold py-3 px-8 rounded-lg transition duration-300 border border-slate-600 hover:border-purple-500/50"
+              className="inline-block bg-slate-700 hover:bg-slate-600 text-white text-lg font-semibold py-3 px-8 rounded-lg transition duration-300 border border-slate-600 hohttps://github.com/nmnjain/Auraweavever:border-purple-500/50"
             >
               Explore on GitHub
             </a>
