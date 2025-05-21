@@ -26,7 +26,7 @@ const Hero = () => {
         
         <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
           <a
-            href="#"
+            href="https://github.com/nmnjain/Auraweave"
             className="rounded-full bg-white px-8 py-3 text-base font-medium text-black shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
             Explore the Demo
