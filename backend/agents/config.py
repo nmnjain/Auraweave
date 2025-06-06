@@ -31,26 +31,40 @@ IPFS_GATEWAY_URL = os.getenv("IPFS_GATEWAY_URL", "http://127.0.0.1:8080/ipfs/")
 
 CONTRACT_INFO_FILE = os.path.join(os.path.dirname(__file__), '..', 'deployments', f'{ACTIVE_NETWORK}.json')
 
-def get_contract_deployment_info():
+def get_deployment_details():
     if not os.path.exists(CONTRACT_INFO_FILE):
-        raise FileNotFoundError(
-            f"Deployment info file not found: {CONTRACT_INFO_FILE}. "
-            f"Please deploy the contract to the '{ACTIVE_NETWORK}' network first using "
-            f"'npx hardhat run scripts/deploy.js --network {ACTIVE_NETWORK}'."
-        )
+        raise FileNotFoundError(f"Deployment info file not found: {CONTRACT_INFO_FILE} for network '{ACTIVE_NETWORK}'")
     with open(CONTRACT_INFO_FILE, 'r') as f:
-        deployment_info = json.load(f)
-    return deployment_info['DataRegistry']['address'], deployment_info['DataRegistry']['abi']
+        return json.load(f)
 
-CONTRACT_ADDRESS = None
-CONTRACT_ABI = None
+# Load all deployment details
+DEPLOYMENT_DETAILS = None
+DATA_REGISTRY_ADDRESS = None
+DATA_REGISTRY_ABI = None
+MOCK_ERC20_ADDRESS = None
+MOCK_ERC20_ABI = None
+
 try:
-    CONTRACT_ADDRESS, CONTRACT_ABI = get_contract_deployment_info()
+    DEPLOYMENT_DETAILS = get_deployment_details()
+    DATA_REGISTRY_INFO = DEPLOYMENT_DETAILS.get('DataRegistry', {})
+    MOCK_ERC20_INFO = DEPLOYMENT_DETAILS.get('MockERC20', {})
+
+    DATA_REGISTRY_ADDRESS = DATA_REGISTRY_INFO.get('address')
+    DATA_REGISTRY_ABI = DATA_REGISTRY_INFO.get('abi')
+    MOCK_ERC20_ADDRESS = MOCK_ERC20_INFO.get('address')
+    MOCK_ERC20_ABI = MOCK_ERC20_INFO.get('abi')
+
+    if not all([DATA_REGISTRY_ADDRESS, DATA_REGISTRY_ABI, MOCK_ERC20_ADDRESS, MOCK_ERC20_ABI]):
+        print("Warning: Some contract details might be missing from deployment file.")
+
 except FileNotFoundError as e:
     print(f"Warning: {e}")
-    print("Contract address and ABI not loaded. Will try to load them dynamically in agent scripts.")
+    print("Contract details not loaded. Ensure contracts are deployed to the '{ACTIVE_NETWORK}' network.")
+except KeyError as e:
+    print(f"Warning: Key {e} not found in deployment file. Structure might be incorrect.")
 
 
 print(f"--- AGENT CONFIG USING NETWORK: {ACTIVE_NETWORK} ---")
 if RPC_URL: print(f"RPC URL: {RPC_URL}")
-if CONTRACT_ADDRESS: print(f"Contract Address: {CONTRACT_ADDRESS}")
+if DATA_REGISTRY_ADDRESS: print(f"DataRegistry Address: {DATA_REGISTRY_ADDRESS}")
+if MOCK_ERC20_ADDRESS: print(f"MockERC20 Address: {MOCK_ERC20_ADDRESS}")
