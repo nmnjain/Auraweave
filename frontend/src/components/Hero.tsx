@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Hero = () => {
+interface HeroProps {
+  onLaunchMarketplace: () => void; 
+}
+
+const Hero: React.FC<HeroProps> = ({ onLaunchMarketplace }) => {
   return (
     <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
       <div className="absolute inset-0 overflow-hidden">
@@ -24,13 +28,14 @@ const Hero = () => {
           Auraweave unlocks a new frontier where AI agents autonomously transact data. We provide the decentralized rails for producers to sell sensor data, analytics, and insights directly to AI agents needing it for model training, decision-making, and on-chain intelligence.
         </p>
         
-        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-          <a
-            href="#"
-            className="rounded-full bg-white px-8 py-3 text-base font-medium text-black shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-          >
-            Explore the Demo
-          </a>
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
+            <button
+              onClick={onLaunchMarketplace} 
+              type="button"
+              className="rounded-full bg-purple-600 px-8 py-3.5 text-base font-semibold text-white shadow-xl hover:bg-purple-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Launch Marketplace dApp
+            </button>
           <a
             href="#features"
             className="rounded-full bg-gray-800 px-8 py-3 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
