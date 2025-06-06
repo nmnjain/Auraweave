@@ -19,7 +19,7 @@ const Footer = () => {
             </div>
            
             <div className="flex items-center space-x-4 mb-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://github.com/nmnjain/Auraweave" className="text-gray-400 hover:text-white transition-colors">
                 <Github size={20} />
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
