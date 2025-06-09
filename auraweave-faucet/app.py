@@ -10,7 +10,7 @@ import logging
 load_dotenv() 
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # --- Configuration ---
 RPC_URL = os.getenv("SEPOLIA_RPC_URL")
