@@ -13,6 +13,7 @@ interface PurchaseProgressModalProps {
     metadataCID?: string;
     txHashes?: { approve?: string; purchase?: string };
     errorMessage?: string;
+    ipfsGatewayUrl: string[];
 }
 
 const StepIndicator: React.FC<{ currentStep: number; targetStep: number; title: string; description: string; txHash?: string }> = ({
@@ -29,10 +30,10 @@ const StepIndicator: React.FC<{ currentStep: number; targetStep: number; title: 
     return (
         <div
             className={`mb-4 p-3 rounded-lg transition-all duration-300 border-l-4 ${isActive
-                    ? 'bg-purple-700/20 border-purple-500'
-                    : isCompleted
-                        ? 'bg-green-700/20 border-green-500/70'
-                        : 'bg-slate-700 border-slate-600'
+                ? 'bg-purple-700/20 border-purple-500'
+                : isCompleted
+                    ? 'bg-green-700/20 border-green-500/70'
+                    : 'bg-slate-700 border-slate-600'
                 }`}
         >
             <div className="flex items-center mb-1">
@@ -45,10 +46,10 @@ const StepIndicator: React.FC<{ currentStep: number; targetStep: number; title: 
                 )}
                 <h4
                     className={`font-semibold ${isCompleted
-                            ? 'text-green-300'
-                            : isActive
-                                ? 'text-purple-300'
-                                : 'text-slate-400'
+                        ? 'text-green-300'
+                        : isActive
+                            ? 'text-purple-300'
+                            : 'text-slate-400'
                         }`}
                 >
                     {title}
@@ -79,6 +80,7 @@ const PurchaseProgressModal: React.FC<PurchaseProgressModalProps> = ({
     metadataCID,
     txHashes,
     errorMessage,
+    ipfsGatewayUrl,
 }) => {
     if (!isOpen) return null;
 
@@ -118,7 +120,7 @@ const PurchaseProgressModal: React.FC<PurchaseProgressModalProps> = ({
                     )}
                 </div>
 
-            
+
                 <StepIndicator
                     currentStep={step}
                     targetStep={1}
@@ -127,10 +129,10 @@ const PurchaseProgressModal: React.FC<PurchaseProgressModalProps> = ({
                     txHash={txHashes?.approve}
                 />
 
-              
+
                 <StepIndicator
                     currentStep={step}
-                    targetStep={3} 
+                    targetStep={3}
                     title="Step 2: Confirm Purchase"
                     description="Confirm in MetaMask to finalize the data purchase and transfer MockUSDC."
                     txHash={txHashes?.purchase}
@@ -142,7 +144,7 @@ const PurchaseProgressModal: React.FC<PurchaseProgressModalProps> = ({
                     </div>
                 )}
 
-                {step === 4 && dataCID && ( 
+                {step === 4 && dataCID && (
                     <div className="mt-6 text-left bg-green-800/20 p-4 rounded-lg border border-green-500/30">
                         <p className="text-green-400 font-semibold mb-3 text-center">
                             Data Acquired!
@@ -169,25 +171,29 @@ const PurchaseProgressModal: React.FC<PurchaseProgressModalProps> = ({
                                 </button>
                             </div>
                         )}
-                        <div className="mt-3 flex space-x-2">
-                            <a
-                                href={`https://ipfs.io/ipfs/${dataCID}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs bg-purple-600 hover:bg-purple-700 text-white font-medium py-1.5 px-3 rounded-lg"
-                            >
-                                View Data on IPFS
-                            </a>
-                            {metadataCID && (
+                        <div className="mt-3 flex flex-col space-y-2">
+                            {ipfsGatewayUrl.map((gateway: string, index: number) => (
                                 <a
-                                    href={`https://ipfs.io/ipfs/${metadataCID}`}
+                                    key={`data-link-${index}`}
+                                    href={`${gateway}${dataCID}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-xs bg-purple-600 hover:bg-purple-700 text-white font-medium py-1.5 px-3 rounded-lg"
+                                >
+                                    View Data on IPFS (Gateway {index + 1})
+                                </a>
+                            ))}
+                            {metadataCID && ipfsGatewayUrl.map((gateway: string, index: number) => (
+                                <a
+                                    key={`metadata-link-${index}`}
+                                    href={`${gateway}${metadataCID}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-xs bg-slate-700 hover:bg-slate-600 text-white font-medium py-1.5 px-3 rounded-lg"
                                 >
-                                    View Metadata
+                                    View Metadata (Gateway {index + 1})
                                 </a>
-                            )}
+                            ))}
                         </div>
                     </div>
                 )}

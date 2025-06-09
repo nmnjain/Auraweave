@@ -75,7 +75,73 @@ async function main() {
         console.log(`Minted ${hre.ethers.formatUnits(amountToMint, 18)} MUSDC to Consumer: ${consumerAddress}`);
       }
   }
+
+  if (hre.network.name === "sepolia" || hre.network.name === "localhost") { // Only seed on testnets/local
+    console.log("\nListing pre-pinned sample data on DataRegistry...");
+
+    // Get the DataRegistry contract instance connected to the deployer
+    const dataRegistryAsDeployer = dataRegistry.connect(deployer);
+
+    // Sample Data 1 (JSON) - REPLACE WITH YOUR ACTUAL CIDs FROM PINATA
+    const sample1_name = "Office Alpha - Temp/Humidity (Sample)";
+    const sample1_desc = "A pre-pinned sample dataset (JSON) for demo.";
+    const sample1_dataCID = "bafkreifysyerz2fucm62r5u3746kfukuklaj54urpcx5uy3xkbsxzrnzdq"; // YOUR CID
+    const sample1_metadataCID = "bafkreideac5llvbagooiaptjc4qo7evhjg73lazj4glsklghdtlqblvrtm"; // YOUR CID
+    const sample1_price = hre.ethers.parseUnits("0.25", 18); // Price: 0.25 MockUSDC (18 decimals)
+
+    try {
+        let tx = await dataRegistryAsDeployer.listData(
+            sample1_name,
+            sample1_desc,
+            sample1_dataCID,
+            sample1_metadataCID,
+            sample1_price
+        );
+        await tx.wait();
+        console.log(`SUCCESS: Listed "${sample1_name}" (Data CID: ${sample1_dataCID})`);
+    } catch (e) {
+        console.error(`ERROR listing "${sample1_name}":`, e.message);
+    }
+
+
+    // Sample Data 2 (CSV) - REPLACE WITH YOUR ACTUAL CIDs FROM PINATA
+    const sample3_name = "Living Room Thermostat Schedule (Sample)";
+    const sample3_desc = "Weekly temperature schedule for a smart thermostat (JSON).";
+    const sample3_dataCID = "bafkreig3qj6hpnvns64jyitzq67csl4mfthqoas27dw5oik5xokn7xmwfm";
+    const sample3_metadataCID = "bafkreiglhydsdctni6bo2h7vmz77pks3xyadd7ei4bsnp56cd3327z7squ";
+    const sample3_price = hre.ethers.parseUnits("1.0", 18); // Price: 1.0 MockUSDC
+
+    try {
+        let tx = await dataRegistryAsDeployer.listData(
+            sample3_name, sample3_desc, sample3_dataCID, sample3_metadataCID, sample3_price
+        );
+        await tx.wait();
+        console.log(`SUCCESS: Listed "${sample3_name}" (Data CID: ${sample3_dataCID})`);
+    } catch (e) {
+        console.error(`ERROR listing "${sample3_name}":`, e.message);
+    }
+
+    // Sample Data 4 (AI Model Metrics) - REPLACE WITH YOUR ACTUAL CIDs
+    const sample4_name = "Image Classifier v2.1 Performance (Sample)";
+    const sample4_desc = "Performance metrics for an image classification AI model (JSON).";
+    const sample4_dataCID = "bafkreifew7rodbqfw7norq3oyl2jxh2sejzh3ol4k6jaf6cfye5a74prpy";
+    const sample4_metadataCID = "bafkreifjapmmjwpn6jhbkqhfkgcwzlyjrmvt2juzkkbfie4zmtktatd5mu";
+    const sample4_price = hre.ethers.parseUnits("2.5", 18); // Price: 2.5 MockUSDC
+
+    try {
+        let tx = await dataRegistryAsDeployer.listData(
+            sample4_name, sample4_desc, sample4_dataCID, sample4_metadataCID, sample4_price
+        );
+        await tx.wait();
+        console.log(`SUCCESS: Listed "${sample4_name}" (Data CID: ${sample4_dataCID})`);
+    } catch (e) {
+        console.error(`ERROR listing "${sample4_name}":`, e.message);
+    }
+
+    console.log("Finished listing sample data.");
+  }
 }
+
 
 main().catch((error) => {
   console.error(error);

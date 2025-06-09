@@ -2,7 +2,7 @@
   "MockERC20": {
     "name": "Mock USD Coin",
     "symbol": "MUSDC",
-    "address": "0x1d6dA6f94b12E577B5Be96df9BB0cCAb92264F0a",
+    "address": "0x62D3F4bB954F86600163383aA79448d5AcFef245",
     "abi": [
       {
         "inputs": [
@@ -428,7 +428,7 @@
     ]
   },
   "DataRegistry": {
-    "address": "0x94fF222bD96D7a2835799C6d248CE7f776cDc44a",
+    "address": "0x85ed8aB0e9515eFE8150C612D15Afd126Cc03f62",
     "abi": [
       {
         "inputs": [
@@ -790,5 +790,5 @@
   },
   "network": "sepolia",
   "deployedBy": "0xb7353B50E669DE220dC65a7F0B4F2C08cf6CCeCf",
-  "timestamp": "2025-06-01T11:36:25.417Z"
+  "timestamp": "2025-06-09T20:26:13.355Z"
 }
