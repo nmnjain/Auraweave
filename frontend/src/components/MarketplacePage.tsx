@@ -528,8 +528,12 @@ const MarketplacePage: React.FC = () => {
                 errorMessage={purchaseStep === 5 ? modalErrorMessage : undefined}
                 ipfsGatewayUrl={IPFS_GATEWAYS}
             />
-            <div className="mt-20"></div> 
-            <Footer />
+            {isConnected && (
+            <>
+                <div className="mt-20"></div>
+                <Footer />
+            </>
+        )}
         </div>
     );
 }

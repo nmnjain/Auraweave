@@ -4,7 +4,7 @@ const CTA = () => {
   return (
     <section className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black to-black/80"></div>
+        <div className="absolute inset-0 bg-transparent"></div>
         <div className="absolute -inset-[10%] opacity-20">
           <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-3xl animate-blob animation-delay-2000"></div>
           <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-3xl animate-blob"></div>

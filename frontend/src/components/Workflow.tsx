@@ -12,7 +12,7 @@ const Workflow: React.FC = () => {
   ];
 
   return (
-    <section id="workflow" className="py-16 md:py-24 bg-gradient-to-b from-black to-black text-white">
+    <section id="workflow" className="py-16 md:py-24 bg-transparent text-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
