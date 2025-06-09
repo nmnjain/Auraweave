@@ -2,13 +2,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ethers, BrowserProvider, Eip1193Provider, Contract, Signer, Network } from 'ethers';
 import MarketplaceNavbar from './MarketplaceNavbar';
-import PurchaseProgressModal from './PurchaseProgressModal'; 
+import PurchaseProgressModal from './PurchaseProgressModal';
+import Footer from './Footer';
 
 import deploymentData from '../config/sepolia.json';
 
 const SEPOLIA_CHAIN_ID_NUM = 11155111;
 const SEPOLIA_CHAIN_ID_HEX = '0xaa36a7';
 const SEPOLIA_NETWORK_NAME = 'Sepolia Testnet';
+
+const METAMASK_SETUP_NOTION_URL = "https://heathered-gargoyle-058.notion.site/MetaMask-Setup-Guide-for-Auraweave-20d84b3aa07f80eaa12dc38069263487?source=copy_link";
+
+const FAUCET_API_URL = "https://auraweave.onrender.com/request-tokens";
 
 const DATA_REGISTRY_ADDRESS = deploymentData.DataRegistry.address;
 const DATA_REGISTRY_ABI = deploymentData.DataRegistry.abi;
@@ -32,7 +37,7 @@ interface PurchasedDataItem {
 
 declare global {
     interface Window {
-        ethereum?: Eip1193Provider & { 
+        ethereum?: Eip1193Provider & {
             isMetaMask?: boolean;
             request: (...args: any[]) => Promise<any>;
             on: (event: string, listener: (...args: any[]) => void) => void;
@@ -56,6 +61,9 @@ const MarketplacePage: React.FC = () => {
     const [isWrongNetwork, setIsWrongNetwork] = useState<boolean>(false);
     const [showConnectPromptCentered, setShowConnectPromptCentered] = useState<boolean>(true);
 
+     const [isRequestingTokens, setIsRequestingTokens] = useState<boolean>(false);
+    const [faucetMessage, setFaucetMessage] = useState<string>(''); 
+
     const [listings, setListings] = useState<DataListing[]>([]);
     const [isLoadingListings, setIsLoadingListings] = useState<boolean>(false);
     const [fetchListingsError, setFetchListingsError] = useState<string>('');
@@ -78,6 +86,55 @@ const MarketplacePage: React.FC = () => {
         localStorage.removeItem('auraweave_wallet_connected');
         console.log("Wallet disconnected.");
     }, []);
+
+        const handleRequestTestTokens = useCallback(async () => {
+        if (!account) { // Check if a wallet account is connected
+            setFaucetMessage("Please connect your wallet first to request tokens.");
+            alert("Please connect your wallet first to request tokens.");
+            return;
+        }
+        if (!FAUCET_API_URL) {
+            setFaucetMessage("Faucet API URL is not configured.");
+            alert("Faucet API URL is not configured.");
+            return;
+        }
+
+        setIsRequestingTokens(true);
+        setFaucetMessage('Requesting test MUSDC from faucet...');
+        console.log(`Requesting MUSDC for account: ${account} from ${FAUCET_API_URL}`);
+
+        try {
+            const response = await fetch(FAUCET_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    
+                },
+                body: JSON.stringify({ address: account }), 
+            });
+
+            const data = await response.json(); 
+
+            if (response.ok) {
+                console.log("Faucet response OK:", data);
+                const successMsg = `Faucet: ${data.message || 'Tokens sent!'}. Tx: ${data.transactionHash ? data.transactionHash.substring(0, 10) + '...' : 'N/A'}`;
+                setFaucetMessage(successMsg);
+                alert(successMsg);
+            } else {
+                console.error("Faucet response NOT OK:", response.status, data);
+                const errorMsg = `Faucet Error: ${data.error || response.statusText || 'Failed to request tokens.'}`;
+                setFaucetMessage(errorMsg);
+                alert(errorMsg);
+            }
+        } catch (error: any) {
+            console.error("Error requesting test tokens (fetch failed):", error);
+            const networkErrorMsg = `Faucet Error: ${error.message || 'Network error or faucet unavailable.'}`;
+            setFaucetMessage(networkErrorMsg);
+            alert(networkErrorMsg);
+        } finally {
+            setIsRequestingTokens(false);
+        }
+    }, [account]); // Dependency is `account`
 
     const fetchListings = useCallback(async (currentProvider: BrowserProvider) => {
         if (!currentProvider) {
@@ -105,7 +162,7 @@ const MarketplacePage: React.FC = () => {
     const updateConnectionState = useCallback(async (browserProvider: BrowserProvider) => {
         console.log("Attempting to update connection state...");
         try {
-            const accounts = await browserProvider.send("eth_accounts", []); 
+            const accounts = await browserProvider.send("eth_accounts", []);
             if (accounts.length > 0) {
                 const currentSigner = await browserProvider.getSigner();
                 const currentAccount = await currentSigner.getAddress();
@@ -120,7 +177,7 @@ const MarketplacePage: React.FC = () => {
                     setIsWrongNetwork(true); setListings([]); setErrorMessage(`Please switch to ${SEPOLIA_NETWORK_NAME}.`);
                 } else {
                     setIsWrongNetwork(false);
-                    if (!hasFetchedListingsInitial) { 
+                    if (!hasFetchedListingsInitial) {
                         fetchListings(browserProvider);
                         setHasFetchedListingsInitial(true);
                     }
@@ -169,9 +226,9 @@ const MarketplacePage: React.FC = () => {
             updateConnectionState(browserProvider).finally(() => setIsLoadingEagerConnection(false));
         } else {
             setIsLoadingEagerConnection(false);
-            setShowConnectPromptCentered(true); 
+            setShowConnectPromptCentered(true);
         }
-    }, [updateConnectionState]); 
+    }, [updateConnectionState]);
 
     useEffect(() => {
         if (window.ethereum) {
@@ -184,7 +241,7 @@ const MarketplacePage: React.FC = () => {
             };
             const handleChainChanged = (_chainId: string) => {
                 console.log("Wallet chain changed to:", _chainId);
-                setHasFetchedListingsInitial(false); 
+                setHasFetchedListingsInitial(false);
                 updateConnectionState(providerForListeners);
             };
 
@@ -197,7 +254,7 @@ const MarketplacePage: React.FC = () => {
         }
     }, [updateConnectionState]);
 
-    useEffect(() => { 
+    useEffect(() => {
         if (account) {
             const stored = localStorage.getItem(`auraweave_purchased_${account}`);
             if (stored) setPurchasedDataItems(JSON.parse(stored));
@@ -218,13 +275,13 @@ const MarketplacePage: React.FC = () => {
             const dataRegistry = new Contract(DATA_REGISTRY_ADDRESS, DATA_REGISTRY_ABI, signer);
             const mockUsdc = new Contract(MOCK_ERC20_ADDRESS, MOCK_ERC20_ABI, signer);
 
-            setPurchaseStep(1); 
+            setPurchaseStep(1);
             const approveTx = await mockUsdc.approve(DATA_REGISTRY_ADDRESS, listing.price);
             setPurchaseTxHashes(prev => ({ ...prev, approve: approveTx.hash }));
             await approveTx.wait();
             setPurchaseStep(2);
 
-            setPurchaseStep(3); 
+            setPurchaseStep(3);
             const purchaseTx = await dataRegistry.purchaseData(listing.id);
             setPurchaseTxHashes(prev => ({ ...prev, purchase: purchaseTx.hash }));
             await purchaseTx.wait();
@@ -239,8 +296,8 @@ const MarketplacePage: React.FC = () => {
             localStorage.setItem(`auraweave_purchased_${account}`, JSON.stringify(currentItems));
             setPurchasedDataItems(currentItems);
 
-            setPurchaseStep(4); 
-            if (provider) fetchListings(provider); 
+            setPurchaseStep(4);
+            if (provider) fetchListings(provider);
         } catch (e: any) {
             const reason = e?.reason || e?.data?.message || e?.message || "Transaction failed.";
             setModalErrorMessage(reason); setPurchaseStep(5); // Error
@@ -281,7 +338,7 @@ const MarketplacePage: React.FC = () => {
             }
         }
 
-       
+
         console.error(`❌ Download failed for CID ${cid} in performActualDownload:`, lastError);
     };
 
@@ -290,24 +347,24 @@ const MarketplacePage: React.FC = () => {
             alert("No CID provided to download click handler.");
             return;
         }
-        if (downloadingCID === cid) { 
+        if (downloadingCID === cid) {
             return;
         }
 
         setDownloadingCID(cid);
         try {
-            await performActualDownload(cid, filenamePrefix); 
+            await performActualDownload(cid, filenamePrefix);
         } catch (e) {
-            
+
             console.error("Error during download process triggered by handleDownloadClick:", e);
         } finally {
-            setDownloadingCID(null); 
+            setDownloadingCID(null);
         }
     }, [downloadingCID, performActualDownload]);
 
 
     // --- JSX ---
-    const backgroundImageUrl = '/marketplace1.jpg'; 
+    const backgroundImageUrl = '/marketplace1.jpg';
 
     if (isLoadingEagerConnection) {
         return (
@@ -325,7 +382,8 @@ const MarketplacePage: React.FC = () => {
             <MarketplaceNavbar
                 isConnected={isConnected} account={account} networkName={network?.name}
                 isWrongNetwork={isWrongNetwork} onSwitchNetwork={switchNetwork}
-                onDisconnectWallet={disconnectWallet}
+                onDisconnectWallet={disconnectWallet} onRequestTestTokens={handleRequestTestTokens} // Pass the new handler
+                isRequestingTokens={isRequestingTokens} 
             />
 
             {(!isConnected && showConnectPromptCentered) && (
@@ -338,9 +396,22 @@ const MarketplacePage: React.FC = () => {
                             {isConnecting ? 'Connecting...' : 'Connect Wallet'} <span className="ml-2 text-xl">+</span>
                         </button>
                         {errorMessage && <p className="mt-4 text-red-400 text-sm">{errorMessage}</p>}
+                        <p className="mt-6 text-xs text-slate-400">
+                            New to Web3 or MetaMask?{' '}
+                            <a
+                                href={METAMASK_SETUP_NOTION_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-purple-400 hover:text-purple-300 underline"
+                            >
+                                Get Started Here
+                            </a>
+                        </p>
                     </div>
+
                 </div>
             )}
+
 
             {isConnected && (
                 <main className="w-full max-w-6xl mx-auto mt-4 z-10 flex-grow">
@@ -352,6 +423,17 @@ const MarketplacePage: React.FC = () => {
                                 className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-4 rounded-xl transition-colors">
                                 Switch to {SEPOLIA_NETWORK_NAME}
                             </button>
+                            <p className="mt-6 text-xs text-slate-400">
+                                New to Web3 or MetaMask?{' '}
+                                <a
+                                    href={METAMASK_SETUP_NOTION_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-purple-400 hover:text-purple-300 underline"
+                                >
+                                    Get Started Here
+                                </a>
+                            </p>
                         </div>
                     ) : (
                         <>
@@ -382,8 +464,8 @@ const MarketplacePage: React.FC = () => {
                                                 <button onClick={() => handlePurchase(listing)}
                                                     disabled={!signer || isPurchasing === listing.id.toString() || listing.seller.toLowerCase() === account?.toLowerCase()}
                                                     className={`w-full mt-3 font-semibold py-2.5 px-4 rounded-xl transition-colors ${listing.seller.toLowerCase() === account?.toLowerCase()
-                                                            ? 'bg-slate-600 text-slate-300 cursor-not-allowed'
-                                                            : 'bg-purple-600 hover:bg-purple-700 text-white'
+                                                        ? 'bg-slate-600 text-slate-300 cursor-not-allowed'
+                                                        : 'bg-purple-600 hover:bg-purple-700 text-white'
                                                         }`}>
                                                     {isPurchasing === listing.id.toString()
                                                         ? 'Processing...'
@@ -446,7 +528,12 @@ const MarketplacePage: React.FC = () => {
                 errorMessage={purchaseStep === 5 ? modalErrorMessage : undefined}
                 ipfsGatewayUrl={IPFS_GATEWAYS}
             />
+            <div className="mt-20"></div> 
+            <Footer />
         </div>
     );
 }
+
+
 export default MarketplacePage;
+
