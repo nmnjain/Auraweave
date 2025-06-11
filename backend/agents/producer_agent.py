@@ -30,7 +30,7 @@ try:
     print(f"Connected to IPFS node: {IPFS_CLIENT_URL}")
 except Exception as e:
     print(f"ERROR: Could not connect to IPFS: {e}. Make sure IPFS daemon is running.")
-    ipfs_client = None s
+    ipfs_client = None 
 
 if not DATA_REGISTRY_ADDRESS or not DATA_REGISTRY_ABI:
     print("ERROR: DataRegistry contract address or ABI not loaded from config. Exiting producer.")
