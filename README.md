@@ -5,7 +5,7 @@ Auraweave is a decentralized marketplace designed to power an **autonomous data 
 ### 🚀 Live Demo & Resources:
 
 * **Hosted dApp (Sepolia Testnet):** [https://auraweave.vercel.app/](https://auraweave.vercel.app/)
-* **Demo Video:** [Watch on YouTube](https://www.youtube.com/watch?v=VLiN5W96_-M&t=112s)
+* **Demo Video:** [Watch on YouTube](https://youtu.be/VLiN5W96_-M?si=nZRbRznw8EKAvqi5)
 * **MockUSDC Faucet API:** [https://auraweave.onrender.com/request-tokens](https://auraweave.onrender.com/request-tokens)
 
 ---
