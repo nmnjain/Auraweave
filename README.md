@@ -210,7 +210,3 @@ auraweave/
 ## 🤝 Contributing
 
 We welcome contributions! Please fork the repo, open an issue, or submit a PR for discussion.
-
----
-
-Let me know if you'd like me to generate the README as a downloadable `.md` file or include sample badge icons for build, license, or testnet links.
