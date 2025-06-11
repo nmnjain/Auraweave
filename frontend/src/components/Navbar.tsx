@@ -67,11 +67,11 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center space-x-2">
             
-            <button className="rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-base font-medium text-white shadow-lg hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transform hover:scale-105 transition-all duration-300">
+            <button   className="rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-base font-medium text-white shadow-lg hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transform hover:scale-105 transition-all duration-300">
               
-              Start Curating
+              Try Now
             </button>
-            <button className="p-1.5 rounded-full hover:bg-gray-600/30 transition-colors duration-200">
+            <button  className="p-1.5 rounded-full hover:bg-gray-600/30 transition-colors duration-200">
               <Moon className="w-4 h-4 text-gray-400" />
             </button>
           </div>

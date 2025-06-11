@@ -95,7 +95,7 @@ const Workflow: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href="https://github.com/nmnjain/Auraweave"
+              href="https://youtu.be/VLiN5W96_-M?si=nZRbRznw8EKAvqi5"
               className="inline-block bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg font-semibold py-3 px-8 rounded-lg transition duration-300 shadow-lg hover:shadow-purple-500/50"
             >
               Watch Demo Video

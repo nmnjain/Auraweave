@@ -22,7 +22,7 @@ const CTA = () => {
           
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href="https://github.com/nmnjain/Auraweave"
+              href="https://youtu.be/VLiN5W96_-M?si=nZRbRznw8EKAvqi5"
               className="rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-base font-medium text-white shadow-lg hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transform hover:scale-105 transition-all duration-300"
             >
               Watch Our Demo Video

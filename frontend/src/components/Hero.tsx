@@ -30,8 +30,7 @@ const Hero: React.FC<HeroProps> = ({ onLaunchMarketplace }) => {
         
          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
             <button
-              onClick={onLaunchMarketplace} 
-              type="button"
+              c
               className="rounded-full bg-purple-600 px-8 py-3.5 text-base font-semibold text-white shadow-xl hover:bg-purple-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
             >
               Try Consumer Demo
